@@ -106,6 +106,7 @@
                                 <artifactVersion>${project.version}</artifactVersion>
                                 <dateLibrary>java8</dateLibrary>
                                 <useGzipFeature>true</useGzipFeature>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
                             </configOptions>
                         </configuration>
                     </execution>
@@ -133,6 +134,7 @@
                                 <artifactVersion>${project.version}</artifactVersion>
                                 <dateLibrary>java8</dateLibrary>
                                 <useGzipFeature>true</useGzipFeature>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
                             </configOptions>
                         </configuration>
                     </execution>
@@ -160,6 +162,7 @@
                                 <artifactVersion>${project.version}</artifactVersion>
                                 <dateLibrary>java8</dateLibrary>
                                 <useGzipFeature>true</useGzipFeature>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
                             </configOptions>
                         </configuration>
                     </execution>
