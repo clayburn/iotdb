@@ -1999,6 +1999,27 @@
                     <artifactId>xml-format-maven-plugin</artifactId>
                     <version>3.2.2</version>
                 </plugin>
+                <plugin>
+                    <groupId>com.gradle</groupId>
+                    <artifactId>gradle-enterprise-maven-extension</artifactId>
+                    <configuration>
+                        <gradleEnterprise>
+                            <plugins>
+                                <plugin>
+                                    <artifactId>maven-checkstyle-plugin</artifactId>
+                                    <inputs>
+                                        <properties>
+                                            <property>
+                                                <name>propertyExpansion</name>
+                                                <value>baseDir=ignored</value>
+                                            </property>
+                                        </properties>
+                                    </inputs>
+                                </plugin>
+                            </plugins>
+                        </gradleEnterprise>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>

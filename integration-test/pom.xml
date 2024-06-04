@@ -380,6 +380,37 @@
                 </configuration>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.gradle</groupId>
+                    <artifactId>gradle-enterprise-maven-extension</artifactId>
+                    <configuration>
+                        <gradleEnterprise>
+                            <plugins>
+                                <plugin>
+                                    <artifactId>maven-checkstyle-plugin</artifactId>
+                                    <inputs>
+                                        <fileSets>
+                                            <fileSet>
+                                                <name>checkstyle.additional.importControl.file</name>
+                                                <paths>
+                                                    <path>${project.basedir}/import-control.xml</path>
+                                                </paths>
+                                                <normalization>
+                                                    <strategy>IGNORED_PATH</strategy>
+                                                    <ignoreLineEndings>true</ignoreLineEndings>
+                                                </normalization>
+                                            </fileSet>
+                                        </fileSets>
+                                    </inputs>
+                                </plugin>
+                            </plugins>
+                        </gradleEnterprise>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
     <profiles>
         <profile>
