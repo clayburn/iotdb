@@ -2006,6 +2006,22 @@
                         <gradleEnterprise>
                             <plugins>
                                 <plugin>
+                                    <artifactId>maven-surefire-plugin</artifactId>
+                                    <inputs>
+                                        <ignoredProperties>
+                                            <ignore>runOrderRandomSeed</ignore>
+                                        </ignoredProperties>
+                                    </inputs>
+                                </plugin>
+                                <plugin>
+                                    <artifactId>maven-failsafe-plugin</artifactId>
+                                    <inputs>
+                                        <ignoredProperties>
+                                            <ignore>runOrderRandomSeed</ignore>
+                                        </ignoredProperties>
+                                    </inputs>
+                                </plugin>
+                                <plugin>
                                     <artifactId>maven-checkstyle-plugin</artifactId>
                                     <inputs>
                                         <properties>
