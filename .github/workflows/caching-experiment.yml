@@ -60,5 +60,31 @@ jobs:
           path: ${{ env.MAVEN_BUILD_CACHE }}
           key: m2-build-cache-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
 
-
-
+  baseline:
+    name: Baseline
+    runs-on: ubuntu-latest
+    needs: seed-caches
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Setup Maven
+        uses: gradle/develocity-actions/maven-setup@v1
+        with:
+          develocity-access-key: ${{ secrets.GE_ACCESS_TOKEN }}
+      - name: Restore Dependency Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.M2_REPOSITORY }}
+          key: m2-repository-${{ hashFiles('**/pom.xml') }}-
+      - name: Restore Develocity Fingerprint Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.DEVELOCITY_FINGERPRINT_CACHE }}
+          key: m2-repository-${{ hashFiles('**/pom.xml') }}-
+      - name: Build Project and Download All Dependencies
+        run: ./mvnw clean ${{ env.MAVEN_GOALS }} ${{ env.DISABLE_MAVEN_CACHE }} ${{ env.DISABLE_DEVELOCITY_CACHE }}
