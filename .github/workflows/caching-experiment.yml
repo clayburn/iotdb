@@ -38,39 +38,39 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.M2_REPOSITORY }}
-          key: m2-repository-${{ hashFiles('**/pom.xml') }}-
+          key: m2-repository-
       - name: Restore Develocity Fingerprint Cache
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.DEVELOCITY_FINGERPRINT_CACHE }}
-          key: dv-fingerprint-cache-${{ hashFiles('**/pom.xml') }}-
+          key: dv-fingerprint-cache-
       - name: Restore Develocity Build Cache
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.DEVELOCITY_BUILD_CACHE }}
-          key: dv-build-cache-${{ hashFiles('**/pom.xml') }}-
+          key: dv-build-cache-
       - name: Build Project and Download All Dependencies
         run: ./mvnw clean dependency:go-offline ${{ env.MAVEN_GOALS }} ${{ env.ENABLE_MAVEN_CACHE }} ${{ env.ENABLE_DEVELOCITY_CACHE }}
       - name: Save Dependency Cache
         uses: actions/cache/save@v4
         with:
           path: ${{ env.M2_REPOSITORY }}
-          key: m2-repository-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
+          key: m2-repository-${{ github.run_id }}
       - name: Save Develocity Fingerprint Cache
         uses: actions/cache/save@v4
         with:
           path: ${{ env.DEVELOCITY_FINGERPRINT_CACHE }}
-          key: dv-fingerprint-cache-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
+          key: dv-fingerprint-cache-${{ github.run_id }}
       - name: Save Develocity Build Cache
         uses: actions/cache/save@v4
         with:
           path: ${{ env.DEVELOCITY_BUILD_CACHE }}
-          key: dv-build-cache-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
+          key: dv-build-cache-${{ github.run_id }}
       - name: Save Maven Build Cache
         uses: actions/cache/save@v4
         with:
           path: ${{ env.MAVEN_BUILD_CACHE }}
-          key: m2-build-cache-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
+          key: m2-build-cache-${{ github.run_id }}
 
   baseline:
     name: Baseline
@@ -92,11 +92,11 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.M2_REPOSITORY }}
-          key: m2-repository-${{ hashFiles('**/pom.xml') }}-
+          key: m2-repository-
       - name: Restore Develocity Fingerprint Cache
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.DEVELOCITY_FINGERPRINT_CACHE }}
-          key: m2-repository-${{ hashFiles('**/pom.xml') }}-
+          key: m2-repository-
       - name: Build Project and Download All Dependencies
         run: ./mvnw ${{ env.MAVEN_GOALS }} ${{ env.DISABLE_MAVEN_CACHE }} ${{ env.DISABLE_DEVELOCITY_CACHE }}
