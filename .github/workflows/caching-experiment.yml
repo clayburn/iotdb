@@ -49,11 +49,6 @@ jobs:
         with:
           path: ${{ env.DEVELOCITY_BUILD_CACHE }}
           key: dv-build-cache-${{ hashFiles('**/pom.xml') }}-
-      - name: Restore Maven Build Cache
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{ env.MAVEN_BUILD_CACHE }}
-          key: m2-build-cache-${{ hashFiles('**/pom.xml') }}-
       - name: Build Project and Download All Dependencies
         run: ./mvnw clean dependency:go-offline ${{ env.MAVEN_GOALS }} ${{ env.ENABLE_MAVEN_CACHE }} ${{ env.ENABLE_DEVELOCITY_CACHE }}
       - name: Save Dependency Cache
