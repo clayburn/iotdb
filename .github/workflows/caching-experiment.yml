@@ -63,4 +63,4 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ~/.m2/repository
-          key: m2-repository-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
+          key: m2-fingerprint-cache-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
