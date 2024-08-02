@@ -11,6 +11,8 @@ env:
   MAVEN_GOALS: clean verify -DskipTests
   DISABLE_MAVEN_CACHE: -Dmaven.build.cache.enabled=false
   DISABLE_DEVELOCITY_CACHE: -Ddevelocity.cache.local.enabled=false -Ddevelocity.cache.remote.enabled=false
+  ENABLE_DEVELOCITY_CACHE: -Ddevelocity.cache.local.enabled=true
+  ENABLE_MAVEN_CACHE: -Ddevelocity.cache.local.enabled=true
   DEVELOCITY_BUILD_CACHE: ~/.m2/.develocity/build-cache
   DEVELOCITY_FINGERPRINT_CACHE: ~/.m2/.develocity/fingerprint-cache
   MAVEN_BUILD_CACHE: ~/.m2/build-cache
@@ -37,8 +39,23 @@ jobs:
         with:
           path: ${{ env.M2_REPOSITORY }}
           key: m2-repository-${{ hashFiles('**/pom.xml') }}-
+      - name: Restore Develocity Fingerprint Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.DEVELOCITY_FINGERPRINT_CACHE }}
+          key: dv-fingerprint-cache-${{ hashFiles('**/pom.xml') }}-
+      - name: Restore Develocity Build Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.DEVELOCITY_BUILD_CACHE }}
+          key: dv-build-cache-${{ hashFiles('**/pom.xml') }}-
+      - name: Restore Maven Build Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.MAVEN_BUILD_CACHE }}
+          key: m2-build-cache-${{ hashFiles('**/pom.xml') }}-
       - name: Build Project and Download All Dependencies
-        run: ./mvnw clean dependency:go-offline ${{ env.MAVEN_GOALS }}
+        run: ./mvnw clean dependency:go-offline ${{ env.MAVEN_GOALS }} ${{ env.ENABLE_MAVEN_CACHE }} ${{ env.ENABLE_DEVELOCITY_CACHE }}
       - name: Save Dependency Cache
         uses: actions/cache/save@v4
         with:
