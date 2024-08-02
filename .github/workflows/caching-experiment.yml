@@ -10,6 +10,8 @@ env:
 #  MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3
   MAVEN_ARGS: -Ddevelocity.url=https://ge.solutions-team.gradle.com --quiet --batch-mode --no-transfer-progress
   MAVEN_GOALS: clean verify -DskipTests
+  DISABLE_MAVEN_CACHE: -Dmaven.build.cache.enabled=false
+  DISABLE_DEVELOCITY_CACHE: -Ddevelocity.cache.local.enabled=false -Ddevelocity.cache.remote.enabled=false
 
 jobs:
   seed-dependency-cache:
@@ -66,7 +68,7 @@ jobs:
           path: ~/.m2/repository
           key: m2-repository-${{ hashFiles('**/pom.xml') }}-
       - name: Build
-        run: ./mvnw ${{ env.MAVEN_GOALS }} -Ddevelocity.cache.local.enabled=false -Ddevelocity.cache.remote.enabled=false
+        run: ./mvnw ${{ env.MAVEN_GOALS }} ${{ env.DISABLE_MAVEN_CACHE }} ${{ env.DISABLE_DEVELOCITY_CACHE }}
       - name: Save Fingerprint Cache
         uses: actions/cache/save@v4
         with:
