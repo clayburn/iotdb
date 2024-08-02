@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup Maven
         uses: gradle/develocity-actions/maven-setup@v1
         with:
@@ -44,7 +44,7 @@ jobs:
     needs: seed-dependency-cache
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup Maven
         uses: gradle/develocity-actions/maven-setup@v1
         with:
