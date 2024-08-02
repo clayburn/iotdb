@@ -36,21 +36,32 @@ jobs:
           path: ~/.m2/repository
           key: m2-repository-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
 
-#  baseline:
-#    name: Baseline
-#    runs-on: ubuntu-latest
-#    needs: seed-dependency-cache
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v4
-#      - name: Setup Maven
-#        uses: gradle/develocity-actions/maven-setup@v1
-#        with:
-#          develocity-access-key: ${{ env.DEVELOCITY_ACCESS_KEY }}
-#      - name: Restore Dependency Cache
-#        uses: actions/cache/restore@v4
-#        with:
-#          path: ~/.m2/repository
-#          key: m2-repository-${{ hashFiles('**/pom.xml') }}-
-#      - name: Build
-#        run: ./mvnw ${{ env.MAVEN_GOALS }}
+  baseline:
+    name: Baseline
+    runs-on: ubuntu-latest
+    needs: seed-dependency-cache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Maven
+        uses: gradle/develocity-actions/maven-setup@v1
+        with:
+          develocity-access-key: ${{ secrets.GE_ACCESS_TOKEN }}
+      - name: Restore Fingerprint Cache
+        # Fingerprinting done by Develocity should not penalize baseline, but we still want the build scan
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/fingerprint-cache
+          key: m2-fingerprint-cache-${{ hashFiles('**/pom.xml') }}-
+      - name: Restore Dependency Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository
+          key: m2-repository-${{ hashFiles('**/pom.xml') }}-
+      - name: Build
+        run: ./mvnw ${{ env.MAVEN_GOALS }} -Ddevelocity.cache.local.enabled=false -Ddevelocity.cache.remote.enabled=false
+      - name: Save Fingerprint Cache
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.m2/repository
+          key: m2-repository-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
