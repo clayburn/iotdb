@@ -50,7 +50,7 @@ jobs:
           path: ${{ env.DEVELOCITY_BUILD_CACHE }}
           key: dv-build-cache-
       - name: Build Project and Download All Dependencies
-        run: ./mvnw clean dependency:go-offline ${{ env.MAVEN_GOALS }} ${{ env.ENABLE_MAVEN_CACHE }} ${{ env.ENABLE_DEVELOCITY_CACHE }}
+        run: ./mvnw clean dependency:go-offline ${{ env.MAVEN_GOALS }} ${{ env.ENABLE_MAVEN_CACHE }} ${{ env.ENABLE_DEVELOCITY_CACHE }} -Dspotless.check.skip=true -Drat.skip=true
       - name: Save Dependency Cache
         uses: actions/cache/save@v4
         with:
