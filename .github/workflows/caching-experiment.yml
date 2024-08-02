@@ -12,7 +12,7 @@ env:
   DISABLE_MAVEN_CACHE: -Dmaven.build.cache.enabled=false
   DISABLE_DEVELOCITY_CACHE: -Ddevelocity.cache.local.enabled=false -Ddevelocity.cache.remote.enabled=false
   ENABLE_DEVELOCITY_CACHE: -Ddevelocity.cache.local.enabled=true
-  ENABLE_MAVEN_CACHE: -Ddevelocity.cache.local.enabled=true
+  ENABLE_MAVEN_CACHE: -Dmaven.build.cache.enabled=true
   DEVELOCITY_BUILD_CACHE: ~/.m2/.develocity/build-cache
   DEVELOCITY_FINGERPRINT_CACHE: ~/.m2/.develocity/fingerprint-cache
   MAVEN_BUILD_CACHE: ~/.m2/build-cache
@@ -85,7 +85,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -104,4 +104,4 @@ jobs:
           path: ${{ env.DEVELOCITY_FINGERPRINT_CACHE }}
           key: m2-repository-${{ hashFiles('**/pom.xml') }}-
       - name: Build Project and Download All Dependencies
-        run: ./mvnw clean ${{ env.MAVEN_GOALS }} ${{ env.DISABLE_MAVEN_CACHE }} ${{ env.DISABLE_DEVELOCITY_CACHE }}
+        run: ./mvnw ${{ env.MAVEN_GOALS }} ${{ env.DISABLE_MAVEN_CACHE }} ${{ env.DISABLE_DEVELOCITY_CACHE }}
