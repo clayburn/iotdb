@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  MAVEN_ARGS: -Ddevelocity.url=https://ge.solutions-team.gradle.com --quiet --batch-mode --no-transfer-progress
+  MAVEN_ARGS: -Ddevelocity.url=https://ge.solutions-team.gradle.com --batch-mode --no-transfer-progress
   MAVEN_GOALS: clean verify -DskipTests
   DISABLE_MAVEN_CACHE: -Dmaven.build.cache.enabled=false
   DISABLE_DEVELOCITY_CACHE: -Ddevelocity.cache.local.enabled=false -Ddevelocity.cache.remote.enabled=false
