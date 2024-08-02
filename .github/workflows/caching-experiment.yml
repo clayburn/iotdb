@@ -30,10 +30,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Setup Maven
-        uses: gradle/develocity-actions/maven-setup@v1
-        with:
-          develocity-access-key: ${{ secrets.GE_ACCESS_TOKEN }}
+#      - name: Setup Maven
+#        uses: gradle/develocity-actions/maven-setup@v1
+#        with:
+#          develocity-access-key: ${{ secrets.GE_ACCESS_TOKEN }}
       - name: Restore Dependency Cache
         uses: actions/cache/restore@v4
         with:
@@ -51,6 +51,8 @@ jobs:
           key: dv-build-cache-
       - name: Build Project and Download All Dependencies
         run: ./mvnw clean dependency:go-offline ${{ env.MAVEN_GOALS }} ${{ env.ENABLE_MAVEN_CACHE }} ${{ env.ENABLE_DEVELOCITY_CACHE }}
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
       - name: Save Dependency Cache
         uses: actions/cache/save@v4
         with:
