@@ -7,15 +7,18 @@ on:
   workflow_dispatch:
 
 env:
-#  MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3
   MAVEN_ARGS: -Ddevelocity.url=https://ge.solutions-team.gradle.com --quiet --batch-mode --no-transfer-progress
   MAVEN_GOALS: clean verify -DskipTests
   DISABLE_MAVEN_CACHE: -Dmaven.build.cache.enabled=false
   DISABLE_DEVELOCITY_CACHE: -Ddevelocity.cache.local.enabled=false -Ddevelocity.cache.remote.enabled=false
+  DEVELOCITY_BUILD_CACHE: ~/.m2/.develocity/build-cache
+  DEVELOCITY_FINGERPRINT_CACHE: ~/.m2/.develocity/fingerprint-cache
+  MAVEN_BUILD_CACHE: ~/.m2/build-cache
+  M2_REPOSITORY: ~/.m2/repository
 
 jobs:
-  seed-dependency-cache:
-    name: Seed Dependency Cache
+  seed-caches:
+    name: Seed Caches
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,46 +34,30 @@ jobs:
       - name: Restore Dependency Cache
         uses: actions/cache/restore@v4
         with:
-          path: ~/.m2/repository
+          path: ${{ env.M2_REPOSITORY }}
           key: m2-repository-${{ hashFiles('**/pom.xml') }}-
-      - name: Seed Dependency Cache
-        run: ./mvnw dependency:go-offline
+      - name: Build Project and Download All Dependencies
+        run: ./mvnw clean dependency:go-offline ${{ env.MAVEN_GOALS }}
       - name: Save Dependency Cache
         uses: actions/cache/save@v4
         with:
-          path: ~/.m2/repository
+          path: ${{ env.M2_REPOSITORY }}
           key: m2-repository-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
-
-  baseline:
-    name: Baseline
-    runs-on: ubuntu-latest
-    needs: seed-dependency-cache
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-      - name: Setup Maven
-        uses: gradle/develocity-actions/maven-setup@v1
-        with:
-          develocity-access-key: ${{ secrets.GE_ACCESS_TOKEN }}
-      - name: Restore Fingerprint Cache
-        # Fingerprinting done by Develocity should not penalize baseline, but we still want the build scan
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/fingerprint-cache
-          key: m2-fingerprint-cache-${{ hashFiles('**/pom.xml') }}-
-      - name: Restore Dependency Cache
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository
-          key: m2-repository-${{ hashFiles('**/pom.xml') }}-
-      - name: Build
-        run: ./mvnw ${{ env.MAVEN_GOALS }} ${{ env.DISABLE_MAVEN_CACHE }} ${{ env.DISABLE_DEVELOCITY_CACHE }}
-      - name: Save Fingerprint Cache
+      - name: Save Develocity Fingerprint Cache
         uses: actions/cache/save@v4
         with:
-          path: ~/.m2/repository
-          key: m2-fingerprint-cache-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
+          path: ${{ env.DEVELOCITY_FINGERPRINT_CACHE }}
+          key: dv-fingerprint-cache-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
+      - name: Save Develocity Build Cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.DEVELOCITY_BUILD_CACHE }}
+          key: dv-build-cache-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
+      - name: Save Maven Build Cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.MAVEN_BUILD_CACHE }}
+          key: m2-build-cache-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
+
+
+
